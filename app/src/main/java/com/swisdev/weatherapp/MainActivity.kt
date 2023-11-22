@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.swisdev.weatherapp.RetrofitInstance.retrofit
 import retrofit2.Call
 
 import retrofit2.Callback
@@ -23,20 +24,23 @@ class MainActivity : AppCompatActivity() {
         tvResponse = findViewById(R.id.tvWeather)
 
         //retrofit instance
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.openweathermap.org/data/2.5/weather/")
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
+        //val retrofit = Retrofit.Builder()
+        //    .baseUrl("https://api.openweathermap.org/data/2.5/weather/")
+        //    .addConverterFactory(ScalarsConverterFactory.create())
+        //    .build()
+        //val weatherService = retrofit.create(WeatherService::class.java)
 
-        val WeatherService = retrofit.create(WeatherService::class.java)
+        val weatherService = RetrofitInstance.retrofit.create(WeatherService::class.java)
 
         // call weather api
-        val result = WeatherService.getWeather()
+        val result = weatherService.getWeather()
 
         result.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful){
                     tvResponse.text = response.body()
+                } else{
+                    tvResponse.text = "error"
                 }
             }
 
